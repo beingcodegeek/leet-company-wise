@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Questions for {{ company }}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .question-item {
+            margin-bottom: 10px;
+        }
+        .tags {
+            font-size: 0.9em;
+            color: gray;
+        }
+        .tags span {
+            margin-right: 10px;
+        }
+        .form-check-input {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Questions for {{ company }}</h1>
+        <ul class="list-unstyled">
+            {% for question in questions %}
+            <li class="question-item">
+                <a href="{{ question[1] }}" target="_blank">{{ question[0] }}</a>
+                <div class="tags">
+                    <span>Acceptance: {{ question[2] }}</span>
+                    <span>Difficulty: {{ question[3] }}</span>
+                </div>
+                <form action="/update_checklist" method="post" class="form-check">
+                    <input type="hidden" name="company" value="{{ company }}">
+                    <input type="hidden" name="question_title" value="{{ question[0] }}">
+                    <input type="checkbox" name="solved" class="form-check-input" {{ checklist_titles[question[0]] and 'checked' }}>
+                    <label class="form-check-label">Solved</label>
+                    <input type="submit" value="Update">
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+        <br>
+        <a href="/">Go Back</a>
+    </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

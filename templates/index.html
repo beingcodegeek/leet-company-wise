@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select Company</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .btn-primary {
+            width: 100%;
+        }
+        .dropdown-menu {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .dropdown-item {
+            cursor: pointer;
+            text-transform: uppercase; /* Display company names in uppercase */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>LeetCode Company-Wise Questions</h1>
+        <form action="/questions" method="post">
+            <div class="form-group">
+                <label for="company">Company:</label>
+                <div class="dropdown">
+                    <input class="form-control" id="search" type="text" placeholder="Search for a company..." autocomplete="off" oninput="filterDropdown()" onclick="showAll()">
+                    <div class="dropdown-menu" id="dropdown">
+                        {% for company in companies %}
+                        <a class="dropdown-item" onclick="selectCompany('{{ company }}')">{{ company | upper }}</a> <!-- Display company names in uppercase -->
+                        {% endfor %}
+                    </div>
+                </div>
+                <input type="hidden" name="company" id="company" required>
+            </div>
+            <div class="form-group">
+                <label for="limit">Number of Questions:</label>
+                <select class="form-control" name="limit" id="limit">
+                    <option value="10">Top 10</option>
+                    <option value="20">Top 20</option>
+                    <option value="50">Top 50</option>
+                    <option value="0">Show All</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Get Questions</button>
+        </form>
+    </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function filterDropdown() {
+            var filter = document.getElementById('search').value.toUpperCase(); // Convert user input to uppercase
+            var items = document.querySelectorAll('#dropdown .dropdown-item');
+            var dropdown = document.getElementById('dropdown');
+            var anyVisible = false;
+            items.forEach(function(item) {
+                var text = item.textContent.toUpperCase(); // Convert company name to uppercase for comparison
+                if (text.includes(filter)) {
+                    item.style.display = '';
+                    anyVisible = true;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            dropdown.classList.toggle('show', anyVisible && filter.length > 0);
+        }
+
+        function selectCompany(company) {
+            document.getElementById('company').value = company;
+            document.getElementById('search').value = company;
+            var dropdown = document.getElementById('dropdown');
+            dropdown.classList.remove('show');
+        }
+
+        function showAll() {
+            var items = document.querySelectorAll('#dropdown .dropdown-item');
+            var dropdown = document.getElementById('dropdown');
+            items.forEach(function(item) {
+                item.style.display = '';
+            });
+            dropdown.classList.add('show');
+        }
+
+        document.addEventListener('click', function(e) {
+            if (!document.getElementById('search').contains(e.target)) {
+                var dropdown = document.getElementById('dropdown');
+                dropdown.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>
